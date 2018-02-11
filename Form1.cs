@@ -23,7 +23,7 @@ namespace Calculator
         }    
         private void NumberClick(object sender, EventArgs e)
         {
-
+            button16.Focus();
             if (result.Text == "0" || pressed == true || operationended == true)
             {
                 operationended = false;
@@ -42,7 +42,7 @@ namespace Calculator
             }
             else
                 result.Text += b.Text;
-           button16.Focus();
+           
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -50,63 +50,44 @@ namespace Calculator
         }
         private void button16_Click(object sender, EventArgs e)
         {
-            
-            switch (operation)
-            { 
-                case "+":
-                    try
-                    {
+            try
+            {
+                switch (operation)
+                {
+                    case "+":
                         result.Text = (value + double.Parse(result.Text)).ToString();
-                    }
-                    catch(Exception)
-                    {
-                    }
-                    break;
-                case "-":
-                    try
-                    {
-                        result.Text = (value - double.Parse(result.Text)).ToString();                 
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    break;
-                case "*":
-                    try
-                    {
+                        break;
+                    case "-":
+                        result.Text = (value - double.Parse(result.Text)).ToString();
+                        break;
+                    case "*":
                         result.Text = (value * double.Parse(result.Text)).ToString();
-                        
-                    }
-                    catch(Exception)
-                    { }
-                    break;
-                case "/":
-                    try
-                    {
+                        break;
+                    case "/":
                         if (double.Parse(result.Text) != 0)
                             result.Text = (value / double.Parse(result.Text)).ToString();
                         else
                         {
                             result.Text = "Error";
-                            value = 0;
                         }
-
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                    break;
+                        break;
                     default:
-                    break;
+                        break;
+
                 }
-            
+                //value = 0;
+                
+            }
+            catch(Exception)
+            {
+            }         
             operationended = true;
             equation.Text = "";      
         }
 
         private void button17_Click(object sender, EventArgs e)
         {
+            button16.Focus();
             result.Clear();
             value = 0;
             result.Text = "0";
@@ -121,16 +102,19 @@ namespace Calculator
 
         private void button18_Click(object sender, EventArgs e)
         {
+            button16.Focus();
             result.Clear();
             result.Text = "0";       
         }
         private void operator_click(object sender, EventArgs e)
         {
+            button16.Focus();
             Button b = sender as Button;
 
             if (equation.Text != "")
+            {
                 button16_Click(button16, EventArgs.Empty);
-           
+            }
                 operation = b.Text;
             try
             {
@@ -138,7 +122,7 @@ namespace Calculator
             }
             catch(Exception) { }
                 pressed = true;
-                equation.Text = result.Text + " " + b.Text;
+                equation.Text = value.ToString() + " " + b.Text;
 
             
         }
@@ -154,7 +138,7 @@ namespace Calculator
             }
             if (e.KeyChar == (char)8)
             {
-                button18_Click(button18, EventArgs.Empty);
+                button23_Click(button23, EventArgs.Empty);
 
             }
       
@@ -211,7 +195,7 @@ namespace Calculator
                     break;
                 case " ":
                     button16.PerformClick();
-                    break;
+                    break;              
                 default:
                     break;
 
@@ -229,6 +213,64 @@ namespace Calculator
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+       
+
+        private void Unar_Operation(object sender, EventArgs e)
+        {
+            button16.Focus();
+            Button b = sender as Button;
+            string unaroperation = b.Text;
+            try
+            {
+                switch (unaroperation)
+                {
+
+                    case "±":
+                        if (!result.Text.Contains("-"))
+                            result.Text = "-" + result.Text;
+                        else
+                           result.Text=result.Text.Remove(0,1);
+                        break;
+                    case "√":
+                        result.Text = Math.Sqrt(double.Parse(result.Text)).ToString();
+                        operationended = true;
+                        break;
+                    case "%":
+                        result.Text = ((value * double.Parse(result.Text)) / 100).ToString();
+                        break;
+                    case "1/x":
+                        if (result.Text != "0")
+                        {
+                            result.Text = (1 / (double.Parse(result.Text))).ToString();
+                            operationended = true;
+                        }
+                        else
+                        { result.Text = "Error";
+                            operationended = true;
+                        }
+                        break;
+                    default:
+                        break;
+
+                }
+            }
+            catch (Exception)
+            { }
+
+            
+        }
+
+        private void button23_Click(object sender, EventArgs e)
+        {  if (!operationended)
+            {
+                button16.Focus();
+                if (result.Text.Length == 1)
+                    result.Text = "0";
+                else
+                    result.Text = result.Text.Remove(result.Text.Length - 1, 1);
+            }
         }
     }
 }
